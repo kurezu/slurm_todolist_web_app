@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Todo List</title>       
+        
+        <link rel="stylesheet" href="https://unpkg.com/purecss@2.1.0/build/pure-min.css" integrity="sha384-yHIFVG6ClnONEA5yB5DJXfW2/KC173DIQrYoZMEtBvGzmf0PKiGyNEqe9N6BNDBH" crossorigin="anonymous">
+    </head>
+    <body>
+        <form id = "TodoListForm" class="pure-form pure-form-aligned" action="add" method="post"> 
+            <fieldset>
+                <legend>TODO List Web App</legend>
+                <div class="pure-control-group">
+                    <label for="task">TODO</label>
+                    <input id="task" name="task" type="text" placeholder="Describe task here" autofocus required>   
+                    <input type="submit" class="pure-button pure-button-primary" name ="add" value="add"/>                         
+                </div>                                        
+            </fieldset>                    
+        </form>
+
+        <table class="pure-table" width="50%" >
+            <thead>
+                <tr><th width="5%">Id</th><th>Description</th><th width="25%">Status</th></tr>
+            </thead>
+            <tbody>
+                {% for task in tasks%}
+                    <tr>
+                        <td>{{ task.id }}</td>
+                        <td>{{ task.text }}</td>
+                        {% if task.is_done %}
+                            <td>Complete</td> 
+                        {% else %}
+                            <td>In Progress <a href="done/{{task.id}}">Done</a> </td> 
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <form class="pure-form" action="clear" method="post"> 
+            <fieldset>
+                <div class="pure-controls">    
+                    <style scoped="">          
+                        .button-error { background: rgb(202, 60, 60); }                   
+                    </style>                
+                    <input type="submit" class="pure-button button-error" name ="clear" value="clear"/> 
+                </div>      
+            </fieldset>
+        </form>
+
+        <br><br><br>
+
+    </body>
+</html>
