@@ -12,7 +12,8 @@
                 <legend>TODO List Web App</legend>
                 <div class="pure-control-group">
                     <label for="task">TODO</label>
-                    <input id="task" name="task" type="text" placeholder="Describe task here" autofocus required>   
+                    <input id="task" name="task" type="text" placeholder="Task name" autofocus required>
+                    <input id="details" name="details" type="text" placeholder="Details" autofocus required>    
                     <input type="submit" class="pure-button pure-button-primary" name ="add" value="add"/>                         
                 </div>                                        
             </fieldset>                    
@@ -20,17 +21,47 @@
 
         <table class="pure-table" width="50%" >
             <thead>
-                <tr><th width="5%">Id</th><th>Description</th><th width="25%">Status</th></tr>
+                <tr><th width="5%">Id</th><th>Description</th><th width="25%">Status</th><th width="25%">Time</th></tr>
             </thead>
             <tbody>
                 {% for task in tasks%}
                     <tr>
                         <td>{{ task.id }}</td>
-                        <td>{{ task.text }}</td>
+                        <td>{{ task.text }}
+                            <br>
+                            <details>
+                                <summary>Сведения</summary>
+                                {{ task.details }}
+                            </details>
+                        </td>
                         {% if task.is_done %}
-                            <td>Complete</td> 
+                            <style scoped="">          
+                                .button-reopen { background: rgb(202, 202, 60); }                   
+                            </style>     
+                            <td>
+                                <form action="reopen/{{task.id}}">
+                                    Complete 
+                                    <input type="submit" class="pure-button button-reopen" name ="Reopen" value="Reopen"/>
+                                </form>
+                            </td> 
+                            <td>
+                                Дата и время завершения задачи:
+                                <br>{{ task.get_close_time() }}
+                            </td>
                         {% else %}
-                            <td>In Progress <a href="done/{{task.id}}">Done</a> </td> 
+                            <style scoped="">          
+                                .button-done { background: rgb(60, 202, 60); }                   
+                            </style>           
+                            <td>
+                                <form action="done/{{task.id}}"> 
+                                    In Progress 
+                                    <input type="submit" class="pure-button button-done" name ="Done" value="Done"/>
+                                </form>  
+                            </td> 
+                            <td>
+                                Дата и время создания задачи:
+                                <br>{{ task.get_create_time() }}
+                            </td>
                         {% endif %}
                     </tr>
                 {% endfor %}
