@@ -1,9 +1,10 @@
-from flask import Flask, render_template, redirect, request, url_for
+from flask import Flask, render_template, redirect, request, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:12345@localhost/testdb2'
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 db = SQLAlchemy(app)
 
 class Task(db.Model):
@@ -44,8 +45,13 @@ def clear():
 
 @app.route('/done/<int:task_id>')
 def done(task_id):
-    task = Task.query.get(task_id)   
-    task.is_done = True 
+    try:
+        task = Task.query.get(task_id)
+        task.is_done = True 
+    except AttributeError:
+        flash(f'Задание с номером {task_id} не найдено.', 'success')
+        return redirect(url_for('index'))
+    flash(f'Задание с номером {task_id} завершено.', 'success')
     task.close_time = datetime.today()
     db.session.add(task)
     db.session.commit()
@@ -53,10 +59,14 @@ def done(task_id):
 
 @app.route('/reopen/<int:task_id>')
 def reopen(task_id):
-    task = Task.query.get(task_id)   
-    task.is_done = False 
+    try:
+        task = Task.query.get(task_id)   
+        task.is_done = False 
+    except AttributeError:
+        flash(f'Задание с номером {task_id} не найдено.', 'success')
+        return redirect(url_for('index'))
+    flash(f'Задание с номером {task_id} переоткрыто.', 'success')
     task.close_time = None
-    db.session.add(task)
     db.session.commit()
     return redirect(url_for('index'))
 

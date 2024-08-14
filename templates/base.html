@@ -39,7 +39,7 @@
                                 .button-reopen { background: rgb(202, 202, 60); }                   
                             </style>     
                             <td>
-                                <form action="reopen/{{task.id}}">
+                                <form action="{{url_for('reopen', task_id=task.id)}}">
                                     Complete 
                                     <input type="submit" class="pure-button button-reopen" name ="Reopen" value="Reopen"/>
                                 </form>
@@ -53,7 +53,7 @@
                                 .button-done { background: rgb(60, 202, 60); }                   
                             </style>           
                             <td>
-                                <form action="done/{{task.id}}"> 
+                                <form action="{{url_for('done', task_id=task.id)}}"> 
                                     In Progress 
                                     <input type="submit" class="pure-button button-done" name ="Done" value="Done"/>
                                 </form>  
@@ -80,6 +80,14 @@
         </form>
 
         <br><br><br>
-
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <ul class="flashes">
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
     </body>
 </html>
